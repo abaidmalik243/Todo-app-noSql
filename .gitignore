@@ -3,9 +3,8 @@
 # dependencies
 /node_modules
 
-/config/dev.js
 # testing
-
+/coverage
 
 # production
 push.sh

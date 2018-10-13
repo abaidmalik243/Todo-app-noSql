@@ -3,12 +3,11 @@ import * as bodyParser from "body-parser";
 import * as mongoose from "mongoose";
 import * as session from 'express-session';
 import * as cookieparser from 'cookie-parser';
-import * as path  from 'path';
 import * as passport from 'passport';
 import setuppassport from './config/Passport';
 import usersRouter from './routes/users';
 import todoRouter from './routes/addToDo';
-var dbURI = require('./config/key');
+var dbURI = require('./config/dev');
 
 
 //creating App
@@ -27,6 +26,14 @@ App.use(session({
 
 App.use(cookieparser());
 
+App.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
+
 //connect with mongoose
 mongoose.connect(dbURI,{ useNewUrlParser: true }, function (err) {
   if (err) throw err;
@@ -44,5 +51,5 @@ App.use('/todo/api/v1.0', todoRouter);
 
 
 //serve static files
-App.use(express.static(path.join(__dirname, './build')));
+App.use(express.static('./build'));
 export {App};
